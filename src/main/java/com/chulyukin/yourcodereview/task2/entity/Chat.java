@@ -4,10 +4,11 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-public class Chat {
+@Table(name = "chats")
+public class Chat implements Comparable<Chat>{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -19,7 +20,7 @@ public class Chat {
     /**
      * Список пользователей чата
      */
-    @ManyToMany(cascade = {CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "CHAT_USER",
             joinColumns = @JoinColumn(name = "CHAT_ID"),
             inverseJoinColumns = @JoinColumn(name = "USER_ID")
@@ -86,4 +87,8 @@ public class Chat {
         return Objects.hash(id, name, users, created_at);
     }
 
+    @Override
+    public int compareTo(Chat o) {
+        return (int) (this.getCreated_at().getTime() - o.getCreated_at().getTime());
+    }
 }

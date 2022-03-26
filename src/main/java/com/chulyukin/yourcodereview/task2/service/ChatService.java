@@ -12,15 +12,15 @@ public interface ChatService {
 
     /**
      * Создание чата
-     * @param chat
-     * @return id
+     * @param chat чат
+     * @return id идентификатор чата
      */
     Long create(Chat chat);
 
     /**
      * Получить список чатов
-     * @param user
-     * @return Список чатов пользователя
+     * @param user пользователь
+     * @return Set<Chat> Список чатов пользователя
      */
     Set<Chat> getChatsByUser(User user);
 }

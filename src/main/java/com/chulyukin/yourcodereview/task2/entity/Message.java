@@ -5,10 +5,11 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-public class Message {
+@Table(name = "messages")
+public class Message implements Comparable<Message>{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -106,4 +107,8 @@ public class Message {
                 '}';
     }
 
+    @Override
+    public int compareTo(Message o) {
+        return (int) (this.getCreated_at().getTime() - o.getCreated_at().getTime());
+    }
 }

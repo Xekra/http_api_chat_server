@@ -1,4 +1,6 @@
 package com.chulyukin.yourcodereview.task2.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -8,10 +10,12 @@ import java.util.Set;
 
 
 @Entity
+@Table(name = "users")
+@JsonIgnoreProperties({"chats", "messages"})
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -25,10 +29,18 @@ public class User {
      */
     private Date created_at;
 
+    /**
+     * Список чатов в которых состоит пользователь
+     */
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Chat> chats = new HashSet<>();
 
-    @ManyToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    /**
+     * Список сообщений написанных пользователем
+     */
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
     private Set<Message> messages = new HashSet<>();
 
     public User() {

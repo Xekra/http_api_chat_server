@@ -12,15 +12,15 @@ public interface MessageService {
 
     /**
      * Создание сообщения
-     * @param message
-     * @return id
+     * @param message сообщение пользователя
+     * @return id идентификатор сообщения
      */
     Long create(Message message);
 
     /**
      * Получение списка сообщений
-     * @param chat
-     * @return сообщения чата
+     * @param chat чат
+     * @return Set<Message> сообщения чата
      */
     Set<Message> getMessages(Chat chat);
 }

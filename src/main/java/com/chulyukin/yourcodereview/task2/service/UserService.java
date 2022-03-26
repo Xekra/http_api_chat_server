@@ -9,8 +9,8 @@ public interface UserService {
 
     /**
      * Создание нового пользователя
-     * @param user
-     * @return id
+     * @param user пользователь
+     * @return id идентификатор пользователя
      */
     Long create(User user);
 }

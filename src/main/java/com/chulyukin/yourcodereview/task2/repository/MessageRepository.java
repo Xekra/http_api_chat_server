@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
  * Репозиторий для работы с сообщениями
  */
 @Repository
-public interface MessagesRepository extends CrudRepository<Message, Long> {
+public interface MessageRepository extends CrudRepository<Message, Long> {
 }
