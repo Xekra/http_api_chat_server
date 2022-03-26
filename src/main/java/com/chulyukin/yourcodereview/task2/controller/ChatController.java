@@ -16,8 +16,11 @@ import java.util.Set;
 @RequestMapping("/chats")
 public class ChatController {
 
-    @Autowired
-    private ChatServiceImpl chatService;
+    private final ChatServiceImpl chatService;
+
+    public ChatController(ChatServiceImpl chatService) {
+        this.chatService = chatService;
+    }
 
     /**
      * POST запрос на создание чата

@@ -2,6 +2,8 @@ package com.chulyukin.yourcodereview.task2.controller;
 
 import com.chulyukin.yourcodereview.task2.entity.Chat;
 import com.chulyukin.yourcodereview.task2.entity.Message;
+import com.chulyukin.yourcodereview.task2.exception.InvalidRequestException;
+import com.chulyukin.yourcodereview.task2.exception.ServiceException;
 import com.chulyukin.yourcodereview.task2.service.impl.MessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,8 +18,11 @@ import java.util.Set;
 @RequestMapping("/messages")
 public class MessageController {
 
-    @Autowired
-    private MessageServiceImpl messageService;
+    private final MessageServiceImpl messageService;
+
+    public MessageController(MessageServiceImpl messageService) {
+        this.messageService = messageService;
+    }
 
     /**
      * POST запрос на создание сообщения
@@ -26,6 +31,12 @@ public class MessageController {
      */
     @PostMapping(value = "/add")
     public @ResponseBody Long createMessage(@RequestBody Message message) {
+
+        if (message == null || message.getChat() == null) {
+            throw new InvalidRequestException("Message or chat id must not be null!");
+        } else if (message.getAuthor() == null || message.getText() == null) {
+            throw new InvalidRequestException("Author of message or text of message must not be null!");
+        }
         return messageService.create(message);
     }
 

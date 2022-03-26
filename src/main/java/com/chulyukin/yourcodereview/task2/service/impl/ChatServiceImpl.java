@@ -2,6 +2,7 @@ package com.chulyukin.yourcodereview.task2.service.impl;
 
 import com.chulyukin.yourcodereview.task2.entity.Chat;
 import com.chulyukin.yourcodereview.task2.entity.User;
+import com.chulyukin.yourcodereview.task2.exception.ServiceException;
 import com.chulyukin.yourcodereview.task2.repository.ChatRepository;
 import com.chulyukin.yourcodereview.task2.repository.UserRepository;
 import com.chulyukin.yourcodereview.task2.service.ChatService;
@@ -15,11 +16,14 @@ import java.util.stream.Collectors;
 @Service
 public class ChatServiceImpl implements ChatService {
 
-    @Autowired
-    private ChatRepository chatRepository;
+    private final ChatRepository chatRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public ChatServiceImpl(ChatRepository chatRepository, UserRepository userRepository) {
+        this.chatRepository = chatRepository;
+        this.userRepository = userRepository;
+    }
 
     /**
      * Создание чата
@@ -28,8 +32,11 @@ public class ChatServiceImpl implements ChatService {
      */
     @Override
     public Long create(Chat chat) {
-        chat.setCreated_at(new Date());
-        return chatRepository.save(chat).getId();
+        if (chat.getName() != null && !Objects.equals(chat.getName(), "")) {
+            chat.setCreated_at(new Date());
+            return chatRepository.save(chat).getId();
+        }else
+            throw new ServiceException("Chat name field is null.");
     }
 
     /**

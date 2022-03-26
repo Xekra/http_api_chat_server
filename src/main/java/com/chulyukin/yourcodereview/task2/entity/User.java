@@ -50,6 +50,12 @@ public class User {
         this.id = id;
     }
 
+    public User(Long id, String username, Date created_at) {
+        this.id = id;
+        this.username = username;
+        this.created_at = created_at;
+    }
+
     public Long getId() {
         return id;
     }

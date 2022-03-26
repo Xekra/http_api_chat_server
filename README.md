@@ -65,7 +65,7 @@ http://localhost:9000/chats/add
 
 ```bash
 curl -X POST -H "Content-Type: application/json" 
--d "{\"chat\": \"<CHAT_ID>\", \"author\": \"<USER_ID>\", \"text\": \"hi\"}"
+-d "{\"chat\": \"<CHAT_ID>\", \"author\": \"<USER_ID>\", \"text\": \"<TEXT>\"}"
 http://localhost:9000/messages/add
 ```
 
@@ -78,7 +78,7 @@ http://localhost:9000/messages/add
 ```bash
 curl -X POST -H "Content-Type: application/json" 
 -d "{\"user\": \"<USER_ID>\"}"
-http://localhost:9000/messages/add
+http://localhost:9000/chats/get
 ```
 
 Ответ: cписок всех чатов со всеми полями, отсортированный по времени создания последнего сообщения в чате (от позднего к раннему). Или HTTP-код ошибки.
@@ -99,10 +99,26 @@ http://localhost:9000/messages/get
 ### Инструкция по запуску
 - Через команду mvn install собрать проект в jar архив. <br>
   Запустить проект можно открыв терминал в корне проекта, следующей коммандой:
-  java -jar target/Roman_Chulyukin_Task_1_Junior-0.0.1-SNAPSHOT.jar
+  java -jar target/task2-0.0.1-SNAPSHOT.jar
 
-- Так же проект можно запустить через intellij idea запустив на исполнение класс ImplementationRedisApplication
+- Так же проект можно запустить через intellij idea запустив на исполнение класс Task2Application
 
 ###Примеры использования и результаты выполнения программы
-- Запустить скрипт post_requesrs.sh на исполнение расположенный в корне проекта.
-- После его выполнения будут созданы пользователи и чаты с сообщениями. 
+Запустить приложение. 
+Запустить скрипт post_requests.sh на исполнение расположенный в корне проекта.
+После его выполнения будут созданы пользователи (user_1, user_2, user_3, user_4, user_5) и чаты (chat_1, chat_2) с сообщениями.
+<br>При отправке запроса:<br> 
+```bash
+curl -X POST -H "Content-Type: application/json" 
+-d "{\"user\": \"3\"}"
+http://localhost:9000/chats/get
+```
+- вернется список из двух чатов (chat_1, chat_2) отсортированных по времени создания последнего сообщения в чате
+
+При отправке запроса:<br>
+```bash
+curl -X POST -H "Content-Type: application/json" 
+-d "{\"chat\": \"1\"}"
+http://localhost:9000/messages/get
+```
+- вернется список всех сообщений чата отсортированный по времени создания сообщения 

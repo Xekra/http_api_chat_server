@@ -18,11 +18,14 @@ import java.util.TreeSet;
 @Service
 public class MessageServiceImpl implements MessageService {
 
-    @Autowired
-    private MessageRepository messageRepository;
+    private final MessageRepository messageRepository;
 
-    @Autowired
-    private ChatRepository chatRepository;
+    private final ChatRepository chatRepository;
+
+    public MessageServiceImpl(MessageRepository messageRepository, ChatRepository chatRepository) {
+        this.messageRepository = messageRepository;
+        this.chatRepository = chatRepository;
+    }
 
     /**
      * Создание сообщения
