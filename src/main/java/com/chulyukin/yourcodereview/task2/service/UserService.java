@@ -13,4 +13,11 @@ public interface UserService {
      * @return id идентификатор пользователя
      */
     Long create(User user);
+
+    /**
+     * Получение пользователя по id
+     * @param id идентификатор пользователя
+     * @return User пользователь
+     */
+    User getUserById(Long id);
 }

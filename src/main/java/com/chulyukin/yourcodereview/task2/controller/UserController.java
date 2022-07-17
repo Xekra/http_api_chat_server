@@ -1,23 +1,21 @@
 package com.chulyukin.yourcodereview.task2.controller;
 
+import com.chulyukin.yourcodereview.task2.dto.UserDTO;
 import com.chulyukin.yourcodereview.task2.entity.User;
+import com.chulyukin.yourcodereview.task2.mappers.UserMapper;
 import com.chulyukin.yourcodereview.task2.service.impl.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
     private final UserServiceImpl userService;
-
-    public UserController(UserServiceImpl userService) {
-        this.userService = userService;
-    }
+    private final UserMapper userMapper;
 
     /**
      * POST запрос на создание пользователя
@@ -25,7 +23,18 @@ public class UserController {
      * @return id или HTTP-код ошибки + описание ошибки
      */
     @PostMapping(value = "/add")
-    public @ResponseBody Long  createUser(@RequestBody User user) {
-        return userService.create(user);
+    public ResponseEntity<Long> createUser(@RequestBody User user) {
+        return new ResponseEntity<>(userService.create(user), HttpStatus.CREATED);
+    }
+
+    /**
+     * GET запрос на получение пользователя по id
+     * @param id идентификатор пользователя
+     * @return UserDTO представление пользователя в DTO
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return new ResponseEntity<>(userMapper.toDTO(user), HttpStatus.OK);
     }
 }

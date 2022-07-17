@@ -1,6 +1,6 @@
 package com.chulyukin.yourcodereview.task2.entity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,7 +11,11 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@JsonIgnoreProperties({"chats", "messages"})
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -21,88 +25,27 @@ public class User {
     /**
      * Имя пользователя
      */
-    @Column(unique = true)
+    @Column(name = "username")
     private String username;
 
     /**
      * Дата создания
      */
-    private Date created_at;
+    @Column(name = "created_at")
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "dd-MM-yyyy hh:mm:ss")
+    private Date createdAt;
 
     /**
      * Список чатов в которых состоит пользователь
      */
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
-    @JsonIgnore
+    @ToString.Exclude
     private Set<Chat> chats = new HashSet<>();
-
-    /**
-     * Список сообщений написанных пользователем
-     */
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonIgnore
-    private Set<Message> messages = new HashSet<>();
-
-    public User() {
-    }
 
     public User(Long id) {
         this.id = id;
-    }
-
-    public User(Long id, String username, Date created_at) {
-        this.id = id;
-        this.username = username;
-        this.created_at = created_at;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Date getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
-    }
-
-    public Set<Chat> getChats() {
-        return chats;
-    }
-
-    public void setChats(Set<Chat> chats) {
-        this.chats = chats;
-    }
-
-    public Set<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(Set<Message> messages) {
-        this.messages = messages;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", created_at=" + created_at +
-                '}';
     }
 
     @Override
@@ -113,11 +56,11 @@ public class User {
         User user = (User) o;
         return Objects.equals(id, user.id) &&
                 Objects.equals(username, user.username) &&
-                Objects.equals(created_at, user.created_at);
+                Objects.equals(createdAt, user.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, created_at);
+        return Objects.hash(id, username, createdAt);
     }
 }

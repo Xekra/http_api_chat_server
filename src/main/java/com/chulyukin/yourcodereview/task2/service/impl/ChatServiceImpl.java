@@ -6,24 +6,18 @@ import com.chulyukin.yourcodereview.task2.exception.ServiceException;
 import com.chulyukin.yourcodereview.task2.repository.ChatRepository;
 import com.chulyukin.yourcodereview.task2.repository.UserRepository;
 import com.chulyukin.yourcodereview.task2.service.ChatService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 @Service
+@RequiredArgsConstructor
 public class ChatServiceImpl implements ChatService {
 
     private final ChatRepository chatRepository;
-
     private final UserRepository userRepository;
-
-    public ChatServiceImpl(ChatRepository chatRepository, UserRepository userRepository) {
-        this.chatRepository = chatRepository;
-        this.userRepository = userRepository;
-    }
 
     /**
      * Создание чата
@@ -33,7 +27,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Long create(Chat chat) {
         if (chat.getName() != null && !Objects.equals(chat.getName(), "")) {
-            chat.setCreated_at(new Date());
+            chat.setCreatedAt(new Date());
             return chatRepository.save(chat).getId();
         }else
             throw new ServiceException("Chat name field is null.");
@@ -47,7 +41,9 @@ public class ChatServiceImpl implements ChatService {
      */
     @Override
     public Set<Chat> getChatsByUser(User user) {
-        return userRepository.findById(user.getId())
-                .get().getChats().stream().sorted().collect(Collectors.toCollection(LinkedHashSet::new));
+        return userRepository.getUserById(user.getId())
+                .getChats()
+                .stream().sorted()
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 }

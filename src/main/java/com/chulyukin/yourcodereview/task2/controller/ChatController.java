@@ -1,26 +1,25 @@
 package com.chulyukin.yourcodereview.task2.controller;
 
+import com.chulyukin.yourcodereview.task2.dto.ChatDTO;
 import com.chulyukin.yourcodereview.task2.entity.Chat;
 import com.chulyukin.yourcodereview.task2.entity.User;
-import com.chulyukin.yourcodereview.task2.service.impl.ChatServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import com.chulyukin.yourcodereview.task2.mappers.ChatMapper;
+import com.chulyukin.yourcodereview.task2.service.ChatService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@Controller
+@RestController
+@RequiredArgsConstructor
 @RequestMapping("/chats")
 public class ChatController {
 
-    private final ChatServiceImpl chatService;
-
-    public ChatController(ChatServiceImpl chatService) {
-        this.chatService = chatService;
-    }
+    private final ChatService chatService;
+    private final ChatMapper chatMapper;
 
     /**
      * POST запрос на создание чата
@@ -28,17 +27,18 @@ public class ChatController {
      * @return id или HTTP-код ошибки + описание ошибки
      */
     @PostMapping(value = "/add")
-    public @ResponseBody Long createChat(@RequestBody Chat chat) {
-        return chatService.create(chat);
+    public ResponseEntity<Long> createChat(@RequestBody Chat chat) {
+        return new ResponseEntity<>(chatService.create(chat), HttpStatus.CREATED);
     }
 
     /**
      * POST запрос для получения списка чатов конкретного пользователя
      * @param user пользователь
-     * @return Set<Chat> или HTTP-код ошибки + описание ошибки
+     * @return Set<ChatDTO> или HTTP-код ошибки + описание ошибки
      */
     @PostMapping(value = "/get")
-    public @ResponseBody Set<Chat> getChats(@RequestBody User user) {
-        return chatService.getChatsByUser(user);
+    public ResponseEntity<Set<ChatDTO>> getChats(@RequestBody User user) {
+        Set<Chat> chats = chatService.getChatsByUser(user);
+        return new ResponseEntity<>(chats.stream().map(chatMapper::toDTO).collect(Collectors.toSet()), HttpStatus.OK);
     }
 }

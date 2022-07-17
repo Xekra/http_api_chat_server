@@ -7,7 +7,7 @@ import com.chulyukin.yourcodereview.task2.exception.ServiceException;
 import com.chulyukin.yourcodereview.task2.repository.ChatRepository;
 import com.chulyukin.yourcodereview.task2.repository.MessageRepository;
 import com.chulyukin.yourcodereview.task2.service.MessageService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -16,16 +16,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 @Service
+@RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository messageRepository;
-
     private final ChatRepository chatRepository;
-
-    public MessageServiceImpl(MessageRepository messageRepository, ChatRepository chatRepository) {
-        this.messageRepository = messageRepository;
-        this.chatRepository = chatRepository;
-    }
 
     /**
      * Создание сообщения
@@ -43,7 +38,7 @@ public class MessageServiceImpl implements MessageService {
                 .count();
 
         if (count > 0) {
-            message.setCreated_at(new Date());
+            message.setCreatedAt(new Date());
             return messageRepository.save(message).getId();
         }
         else

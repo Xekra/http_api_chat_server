@@ -1,5 +1,6 @@
 package com.chulyukin.yourcodereview.task2.service;
 
+import com.chulyukin.yourcodereview.task2.dto.ChatDTO;
 import com.chulyukin.yourcodereview.task2.entity.Chat;
 import com.chulyukin.yourcodereview.task2.entity.User;
 
